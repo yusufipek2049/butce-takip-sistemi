@@ -1,0 +1,52 @@
+@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Gelir Ekle";
+}
+
+<div class="page-heading">
+    <div>
+        <h1 class="h2 mb-1">Gelir ekle</h1>
+        <p class="text-muted mb-0">Gelen parayı kaydet, tablo kendini hemen güncellesin.</p>
+    </div>
+    <a asp-page="/Index" class="btn btn-outline-secondary">Vazgeç</a>
+</div>
+
+<section class="content-panel form-panel">
+    <form method="post" novalidate>
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <input asp-for="Input.Type" type="hidden" />
+
+        <div class="mb-3">
+            <label asp-for="Input.CategoryId" class="form-label"></label>
+            <select asp-for="Input.CategoryId" asp-items="Model.Form.Categories" class="form-select">
+                <option value="">Kategori seçin</option>
+            </select>
+            <span asp-validation-for="Input.CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Amount" class="form-label"></label>
+            <input asp-for="Input.Amount" class="form-control" type="number" min="0.01" step="0.01" placeholder="0.00" />
+            <span asp-validation-for="Input.Amount" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.TransactionDate" class="form-label"></label>
+            <input asp-for="Input.TransactionDate" class="form-control" />
+            <span asp-validation-for="Input.TransactionDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Input.Description" class="form-label"></label>
+            <textarea asp-for="Input.Description" class="form-control" rows="3" maxlength="200" placeholder="İsteğe bağlı açıklama"></textarea>
+            <span asp-validation-for="Input.Description" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Geliri kaydet</button>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

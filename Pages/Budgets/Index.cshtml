@@ -1,0 +1,124 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Bütçe Hedefleri";
+    var isEdit = Model.Input.Id is not null;
+}
+
+<div class="page-heading">
+    <div>
+        <h1 class="h2 mb-1">Bütçe hedefleri</h1>
+        <p class="text-muted mb-0">Her kategoriye yumuşak bir sınır koy, renkler seni zamanında uyarsın.</p>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@if (TempData["WarningMessage"] is string warningMessage)
+{
+    <div class="alert alert-warning">@warningMessage</div>
+}
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <section class="content-panel">
+            <h2 class="h5 mb-3">@(isEdit ? "Bütçe hedefini düzenle" : "Yeni bütçe hedefi")</h2>
+            <form method="post" asp-page-handler="Save" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input asp-for="Input.Id" type="hidden" />
+
+                <div class="mb-3">
+                    <label asp-for="Input.CategoryId" class="form-label"></label>
+                    <select asp-for="Input.CategoryId" asp-items="Model.PageData.ExpenseCategories" class="form-select">
+                        <option value="">Gider kategorisi seçin</option>
+                    </select>
+                    <span asp-validation-for="Input.CategoryId" class="text-danger"></span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label asp-for="Input.Month" class="form-label"></label>
+                        <input asp-for="Input.Month" class="form-control" type="number" min="1" max="12" />
+                        <span asp-validation-for="Input.Month" class="text-danger"></span>
+                    </div>
+                    <div class="col-6">
+                        <label asp-for="Input.Year" class="form-label"></label>
+                        <input asp-for="Input.Year" class="form-control" type="number" min="2000" max="2100" />
+                        <span asp-validation-for="Input.Year" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="my-3">
+                    <label asp-for="Input.LimitAmount" class="form-label"></label>
+                    <input asp-for="Input.LimitAmount" class="form-control" type="number" min="0.01" step="0.01" placeholder="0.00" />
+                    <span asp-validation-for="Input.LimitAmount" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">@(isEdit ? "Hedefi güncelle" : "Hedefi kaydet")</button>
+                @if (isEdit)
+                {
+                    <a asp-page="/Budgets/Index" class="btn btn-outline-secondary w-100 mt-2">Vazgeç</a>
+                }
+            </form>
+        </section>
+    </div>
+    <div class="col-lg-8">
+        <section class="content-panel">
+            <div class="section-title">
+                <h2>Kayitli Hedefler</h2>
+            </div>
+
+            @if (!Model.PageData.Goals.Any())
+            {
+                <div class="empty-state">Henüz bütçe hedefi yok. İlk hedefi ekleyince dashboard renklenecek.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Dönem</th>
+                                <th class="text-end">Limit</th>
+                                <th>Durum</th>
+                                <th class="text-end">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var goal in Model.PageData.Goals)
+                        {
+                            <tr>
+                                <td>@goal.CategoryName</td>
+                                <td>@goal.Month/@goal.Year</td>
+                                <td class="text-end fw-semibold">@goal.LimitAmount.ToString("N2") TL</td>
+                                <td>
+                                    <span class="badge text-bg-@(goal.IsActive ? "success" : "secondary")">
+                                        @(goal.IsActive ? "Aktif" : "Pasif")
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <a asp-page="/Budgets/Index" asp-route-editId="@goal.Id" class="btn btn-sm btn-outline-primary">Düzenle</a>
+                                    @if (goal.IsActive)
+                                    {
+                                        <form method="post" asp-page-handler="Deactivate" asp-route-id="@goal.Id" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-warning">Pasifleştir</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

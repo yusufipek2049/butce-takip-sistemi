@@ -1,0 +1,9 @@
+@model decimal
+
+@{
+    var cssClass = Model < 0 ? "balance-negative" : Model == 0 ? "balance-neutral" : "balance-positive";
+}
+
+<span class="navbar-text fw-semibold balance-pill @cssClass">
+    Güncel bakiye: @Model.ToString("N2") TL
+</span>

@@ -1,0 +1,239 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background: #f6f8f4;
+  color: #23312b;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem #fff, 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}
+
+.navbar {
+  min-height: 64px;
+  background: #ffffff;
+}
+
+.navbar-brand {
+  letter-spacing: 0;
+}
+
+.balance-slot {
+  white-space: nowrap;
+}
+
+.balance-pill {
+  border-radius: 999px;
+  display: inline-flex;
+  padding: 7px 12px;
+}
+
+.balance-positive {
+  background: #e8f7ee;
+  color: #17633a;
+}
+
+.balance-neutral {
+  background: #eef2f7;
+  color: #465467;
+}
+
+.balance-negative {
+  background: #fff1e6;
+  color: #9a3412;
+}
+
+.main-container {
+  padding-top: 28px;
+}
+
+.page-heading {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.dashboard-filter {
+  min-width: 320px;
+}
+
+.metric-card,
+.content-panel {
+  background: #fff;
+  border: 1px solid #e2e8df;
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(35, 49, 43, 0.06);
+}
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 132px;
+  padding: 22px;
+}
+
+.metric-card span {
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.metric-card strong {
+  font-size: 1.65rem;
+}
+
+.metric-income {
+  border-left: 6px solid #2f9e62;
+}
+
+.metric-expense {
+  border-left: 6px solid #e26d5a;
+}
+
+.metric-balance {
+  border-left: 6px solid #3b82f6;
+}
+
+.metric-balance.debt-safe,
+.debt-card.debt-safe {
+  border-left-color: #2f9e62;
+}
+
+.metric-balance.debt-watch,
+.debt-card.debt-watch {
+  border-left-color: #f59e0b;
+}
+
+.metric-balance.debt-risk,
+.debt-card.debt-risk {
+  border-left-color: #dc3545;
+}
+
+.debt-card {
+  justify-content: space-between;
+}
+
+.debt-card small {
+  color: #51615a;
+  line-height: 1.35;
+}
+
+.debt-card.debt-safe {
+  background: #f3fbf5;
+}
+
+.debt-card.debt-watch {
+  background: #fff8eb;
+}
+
+.debt-card.debt-risk {
+  background: #fff2f0;
+}
+
+.content-panel {
+  padding: 22px;
+}
+
+.form-panel {
+  max-width: 720px;
+}
+
+.section-title {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.section-title h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.empty-state {
+  background: #f8faf7;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  color: #607066;
+  padding: 22px;
+  text-align: center;
+}
+
+.budget-status {
+  border-left: 6px solid #2f9e62;
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: #fbfcfa;
+}
+
+.budget-status.border-warning {
+  border-left-color: #f59e0b;
+  background: #fffaf0;
+}
+
+.budget-status.border-danger {
+  border-left-color: #dc3545;
+  background: #fff5f5;
+}
+
+.progress {
+  height: 24px;
+}
+
+.table > :not(caption) > * > * {
+  padding-bottom: 0.9rem;
+  padding-top: 0.9rem;
+}
+
+.footer {
+  background: #fff;
+  bottom: 0;
+  line-height: 60px;
+  position: absolute;
+  width: 100%;
+}
+
+@media (max-width: 991.98px) {
+  .balance-slot {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .page-heading {
+    flex-direction: column;
+  }
+
+  .dashboard-filter {
+    min-width: 100%;
+    width: 100%;
+  }
+
+  .section-title {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

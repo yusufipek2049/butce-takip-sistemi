@@ -1,0 +1,153 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-heading">
+    <div>
+        <p class="text-uppercase text-muted small fw-semibold mb-1">Bütçe Takip Sistemi</p>
+        <h1 class="h2 mb-1">Parana sakin sakin bakalım</h1>
+        <p class="text-muted mb-0">Bu ay gelir, gider, bütçe ve borçluluk durumun tek ekranda.</p>
+    </div>
+    <form method="get" class="row g-2 align-items-end dashboard-filter">
+        <div class="col-6 col-md-auto">
+            <label asp-for="Month" class="form-label">Ay</label>
+            <select asp-for="Month" class="form-select">
+                @for (var month = 1; month <= 12; month++)
+                {
+                    <option value="@month">@month</option>
+                }
+            </select>
+        </div>
+        <div class="col-6 col-md-auto">
+            <label asp-for="Year" class="form-label">Yıl</label>
+            <input asp-for="Year" class="form-control" min="2000" max="2100" />
+        </div>
+        <div class="col-12 col-md-auto">
+            <button class="btn btn-primary w-100" type="submit">Filtrele</button>
+        </div>
+    </form>
+</div>
+
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@if (TempData["WarningMessage"] is string warningMessage)
+{
+    <div class="alert alert-warning">@warningMessage</div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="metric-card metric-income">
+            <span>Bu ay gelen</span>
+            <strong>@Model.Dashboard.TotalIncome.ToString("N2") TL</strong>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="metric-card metric-expense">
+            <span>Bu ay çıkan</span>
+            <strong>@Model.Dashboard.TotalExpense.ToString("N2") TL</strong>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="metric-card metric-balance @Model.Dashboard.DebtStatusCssClass">
+            <span>Net durum</span>
+            <strong>@Model.Dashboard.NetBalance.ToString("N2") TL</strong>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="metric-card debt-card @Model.Dashboard.DebtStatusCssClass">
+            <span>Borçluluk rengi</span>
+            <strong>@Model.Dashboard.DebtStatusTitle</strong>
+            <small>@Model.Dashboard.DebtStatusMessage</small>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <section class="content-panel">
+            <div class="section-title">
+                <h2>Harcamalar nereye gitmiş?</h2>
+                <a asp-page="/Expenses/Create" class="btn btn-sm btn-outline-primary">Gider ekle</a>
+            </div>
+
+            @if (!Model.Dashboard.CategoryExpenseSummaries.Any())
+            {
+                <div class="empty-state">Seçili dönemde gider kaydı yok. Şimdilik tablo temiz görünüyor.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th class="text-end">Toplam</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.Dashboard.CategoryExpenseSummaries)
+                        {
+                            <tr>
+                                <td>@item.CategoryName</td>
+                                <td class="text-end fw-semibold">@item.TotalAmount.ToString("N2") TL</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    </div>
+    <div class="col-lg-6">
+        <section class="content-panel">
+            <div class="section-title">
+                <h2>Bütçe hedefleri</h2>
+                <a asp-page="/Budgets/Index" class="btn btn-sm btn-outline-primary">Bütçe yönet</a>
+            </div>
+
+            @if (!Model.Dashboard.BudgetStatuses.Any())
+            {
+                <div class="empty-state">Seçili dönem için aktif bütçe hedefi yok. İstersen birkaç limit ekleyip takip etmeye başlayabilirsin.</div>
+            }
+            else
+            {
+                <div class="vstack gap-3">
+                    @foreach (var budget in Model.Dashboard.BudgetStatuses)
+                    {
+                        <div class="budget-status border-@budget.AlertCssClass">
+                            <div class="d-flex justify-content-between gap-3">
+                                <div>
+                                    <strong>@budget.CategoryName</strong>
+                                    <div class="text-muted small">@budget.Status</div>
+                                </div>
+                                <div class="text-end">
+                                    <span class="fw-semibold">@budget.SpentAmount.ToString("N2") TL</span>
+                                    <div class="text-muted small">Limit: @budget.LimitAmount.ToString("N2") TL</div>
+                                </div>
+                            </div>
+                            <div class="progress mt-2" role="progressbar" aria-label="@budget.CategoryName bütçe kullanımı">
+                                <div class="progress-bar bg-@budget.AlertCssClass" style="width:@Math.Min(budget.UsagePercent, 100)%">
+                                    @budget.UsagePercent.ToString("N1")%
+                                </div>
+                            </div>
+                            @if (budget.SpentAmount > budget.LimitAmount)
+                            {
+                                <div class="alert alert-danger py-2 px-3 mt-2 mb-0">Bu kategori için bütçe limiti aşıldı.</div>
+                            }
+                            else if (budget.UsagePercent >= 80)
+                            {
+                                <div class="alert alert-warning py-2 px-3 mt-2 mb-0">Bu kategori limite yaklaşıyor.</div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+    </div>
+</div>

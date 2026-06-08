@@ -1,0 +1,34 @@
+@page "{id:int}"
+@model DeleteModel
+@{
+    ViewData["Title"] = "İşlem Sil";
+}
+
+<div class="page-heading">
+    <div>
+        <h1 class="h2 mb-1">İşlemi sil</h1>
+        <p class="text-muted mb-0">Onayladığında bu kayıt listeden kaldırılır.</p>
+    </div>
+    <a asp-page="/Transactions/Index" class="btn btn-outline-secondary">Vazgeç</a>
+</div>
+
+@if (Model.Transaction is not null)
+{
+    <section class="content-panel form-panel">
+        <div class="alert alert-warning">Bu kaydı silmek istediğinizden emin misiniz?</div>
+        <dl class="row">
+            <dt class="col-sm-4">Tarih</dt>
+            <dd class="col-sm-8">@Model.Transaction.TransactionDate.ToString("dd.MM.yyyy")</dd>
+            <dt class="col-sm-4">Kategori</dt>
+            <dd class="col-sm-8">@Model.Transaction.CategoryName</dd>
+            <dt class="col-sm-4">Tutar</dt>
+            <dd class="col-sm-8">@Model.Transaction.Amount.ToString("N2") TL</dd>
+            <dt class="col-sm-4">Açıklama</dt>
+            <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Transaction.Description) ? "-" : Model.Transaction.Description)</dd>
+        </dl>
+        <form method="post">
+            <button type="submit" class="btn btn-danger">Sil</button>
+            <a asp-page="/Transactions/Index" class="btn btn-outline-secondary">Vazgeç</a>
+        </form>
+    </section>
+}

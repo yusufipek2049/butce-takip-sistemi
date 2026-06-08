@@ -1,0 +1,65 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "İşlemler";
+}
+
+<div class="page-heading">
+    <div>
+        <h1 class="h2 mb-1">İşlem listesi</h1>
+        <p class="text-muted mb-0">Gelir ve gider kayıtlarını tek yerde gör, gerektiğinde düzelt.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-page="/Income/Create" class="btn btn-outline-success">Gelir ekle</a>
+        <a asp-page="/Expenses/Create" class="btn btn-outline-danger">Gider ekle</a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@if (!Model.Transactions.Any())
+{
+    <section class="content-panel">
+        <div class="empty-state">Henüz gelir veya gider kaydı yok. İlk kaydı ekleyince burası dolacak.</div>
+    </section>
+}
+else
+{
+    <section class="content-panel">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Tarih</th>
+                        <th>Tur</th>
+                        <th>Kategori</th>
+                        <th>Açıklama</th>
+                        <th class="text-end">Tutar</th>
+                        <th class="text-end">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Transactions)
+                {
+                    var typeClass = item.Type == TransactionType.Income ? "success" : "danger";
+                    var typeText = item.Type == TransactionType.Income ? "Gelir" : "Gider";
+                    <tr>
+                        <td>@item.TransactionDate.ToString("dd.MM.yyyy")</td>
+                        <td><span class="badge text-bg-@typeClass">@typeText</span></td>
+                        <td>@item.CategoryName</td>
+                        <td>@(string.IsNullOrWhiteSpace(item.Description) ? "-" : item.Description)</td>
+                        <td class="text-end fw-semibold">@item.Amount.ToString("N2") TL</td>
+                        <td class="text-end">
+                            <a asp-page="/Transactions/Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Düzenle</a>
+                            <a asp-page="/Transactions/Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Sil</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}

@@ -1,0 +1,101 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Kategori Yönetimi";
+}
+
+<div class="page-heading">
+    <div>
+        <h1 class="h2 mb-1">Kategori yönetimi</h1>
+        <p class="text-muted mb-0">Gelir ve giderleri daha rahat okumak için kategorileri düzenli tutun.</p>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@if (TempData["WarningMessage"] is string warningMessage)
+{
+    <div class="alert alert-warning">@warningMessage</div>
+}
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <section class="content-panel">
+            <h2 class="h5 mb-3">Yeni kategori</h2>
+            <form method="post" asp-page-handler="Create" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Name" class="form-label"></label>
+                    <input asp-for="Input.Name" class="form-control" maxlength="80" placeholder="Örn: Market" />
+                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Input.Type" class="form-label"></label>
+                    <select asp-for="Input.Type" asp-items="Html.GetEnumSelectList<CategoryType>()" class="form-select"></select>
+                    <span asp-validation-for="Input.Type" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Kategori ekle</button>
+            </form>
+        </section>
+    </div>
+    <div class="col-lg-8">
+        <section class="content-panel">
+            <div class="section-title">
+                <h2>Kategoriler</h2>
+            </div>
+
+            @if (!Model.Categories.Any())
+            {
+                <div class="empty-state">Henüz kategori yok.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Ad</th>
+                                <th>Tur</th>
+                                <th>Durum</th>
+                                <th>Kullanım</th>
+                                <th class="text-end">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <tr>
+                                <td>@category.Name</td>
+                                <td>@(category.Type == CategoryType.Income ? "Gelir" : "Gider")</td>
+                                <td>
+                                    <span class="badge text-bg-@(category.IsActive ? "success" : "secondary")">
+                                        @(category.IsActive ? "Aktif" : "Pasif")
+                                    </span>
+                                </td>
+                                <td>@(category.IsUsed ? "Kullanıldı" : "Henüz kullanılmadı")</td>
+                                <td class="text-end">
+                                    <form method="post" asp-page-handler="Toggle" asp-route-id="@category.Id" class="d-inline">
+                                        <button type="submit" class="btn btn-sm @(category.IsActive ? "btn-outline-warning" : "btn-outline-success")">
+                                            @(category.IsActive ? "Pasifleştir" : "Aktifleştir")
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
