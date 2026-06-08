@@ -2,7 +2,7 @@
 
 Bütçe Takip Sistemi, kişisel gelir ve giderleri düzenli takip etmek için hazırlanmış sade bir ASP.NET Core web uygulamasıdır. Kullanıcı gelirlerini, harcamalarını, kategorilerini ve aylık bütçe hedeflerini tek ekranda yönetebilir. Dashboard tarafında aylık özetler, kategori bazlı gider dağılımı, güncel bakiye ve bütçe uyarıları birlikte gösterilir.
 
-Proje Razor Pages, C#, Entity Framework Core ve SQLite ile geliştirildi. Kapsam özellikle SRS dokümanındaki FR-01 ile FR-10 arasındaki gereksinimlere göre sınırlandırıldı. Bu yüzden uygulamada kimlik doğrulama, banka API bağlantısı veya çok kullanıcılı abonelik yapısı yoktur; odak tamamen temel bütçe takip akışlarıdır.
+Proje Razor Pages, C#, Entity Framework Core ve SQLite ile geliştirildi. Kapsam özellikle SRS dokümanındaki FR-01 ile FR-10 arasındaki gereksinimlere göre sınırlandırıldı. Bu yüzden uygulamada kimlik doğrulama, banka API bağlantısı veya çok kullanıcılı abonelik yapısı yoktur. Odak tamamen temel bütçe takip akışlarıdır.
 
 Ana proje dosyası `ButceTakipSistemi.csproj`, yerel veritabanı dosyası ise `butce-takip-sistemi.db` adını kullanır.
 
